@@ -3,7 +3,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login, logout
 
-# from authapp.models import Contact,MembershipPlan,Trainer,Enrollment,Gallery,Attendance
+from authapp.models import Contact
+# ,MembershipPlan,Trainer,Enrollment,Gallery,Attendance
 
 
 # Create your views here.
@@ -52,20 +53,34 @@ def signup(request):
 
 def login(request):
     if request.method == "POST":
-        username = request.POST.get('username')
-        pass1 = request.POST.get('pass1')
+        username = request.POST.get("username")
+        pass1 = request.POST.get("pass1")
         myuser = authenticate(username=username, password=pass1)
         if myuser is not None:
             auth_login(request, myuser)
             messages.success(request, "Login Successful")
-            return redirect('/')
+            return redirect("/")
         else:
             messages.error(request, "Invalid Credentials")
-            return redirect('/login')
+            return redirect("/login")
 
     return render(request, "login.html")
 
+
 def handleLogout(request):
     logout(request)
-    messages.success(request,"Logout Success")    
-    return redirect('/login')
+    messages.success(request, "Logout Success")
+    return redirect("/login")
+
+
+def contact(request):
+    if request.method == "POST":
+        name = request.POST.get("fullname")
+        email = request.POST.get("email")
+        desc = request.POST.get("desc")
+        myquery = Contact(name=name, email=email, description=desc)
+        myquery.save()
+        messages.info(request, "Thanks for Contacting us we will get back you soon")
+        return redirect("/contact")
+
+    return render(request, "contact.html")
