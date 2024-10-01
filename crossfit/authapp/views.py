@@ -135,13 +135,13 @@ def attendance(request):
     SelectTrainer = Trainer.objects.all()
     context = {"SelectTrainer": SelectTrainer}
     if request.method == "POST":
-        phonenumber = request.POST.get("PhoneNumber")
+        Name = request.POST.get("Name")
         Login = request.POST.get("logintime")
         Logout = request.POST.get("loginout")
         SelectWorkout = request.POST.get("workout")
         TrainedBy = request.POST.get("trainer")
         query = Attendance(
-            phonenumber=phonenumber,
+            Name=Name,
             Login=Login,
             Logout=Logout,
             SelectWorkout=SelectWorkout,
@@ -151,3 +151,16 @@ def attendance(request):
         messages.warning(request, "Attendace Applied Success")
         return redirect("/attendance")
     return render(request, "attendance.html", context)
+
+
+def profile(request):
+    if not request.user.is_authenticated:
+        messages.warning(request, "Please Login and Try Again")
+        return redirect("/login")
+
+    user_name = request.user
+    posts = Enrollment.objects.filter(FullName=user_name)
+    attendance = Attendance.objects.filter(Name=user_name)
+
+    context = {"posts": posts, "attendance": attendance}
+    return render(request, "profile.html", context)
