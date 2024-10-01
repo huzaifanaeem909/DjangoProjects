@@ -54,7 +54,7 @@ class MembershipPlan(models.Model):
 
 class Attendance(models.Model):
     Selectdate = models.DateTimeField(auto_now_add=True)
-    phonenumber = models.CharField(max_length=15)
+    Name = models.CharField(max_length=15)
     Login = models.CharField(max_length=200)
     Logout = models.CharField(max_length=200)
     SelectWorkout = models.CharField(max_length=200)
